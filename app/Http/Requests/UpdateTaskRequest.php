@@ -11,7 +11,7 @@ class UpdateTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,41 @@ class UpdateTaskRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if ($method == 'PUT') {
+            return [
+                'title' => 'required|string|min:3|max:100',
+                'description' => 'required|nullable|string',
+                'status' => 'required|in:pending,in_progress,done',
+                'priority' => 'required|in:low,medium,high',
+                'dueDate' => 'required|date',
+                'projectId' => 'required',
+            ];
+        } else {
+            return [
+                'title' => 'sometimes|required|string|min:3|max:100',
+                'description' => 'sometimes|required|nullable|string',
+                'status' => 'sometimes|required|in:pending,in_progress,done',
+                'priority' => 'sometimes|required|in:low,medium,high',
+                'dueDate' => 'sometimes|required|date',
+                'projectId' => 'sometimes|required',
+            ];
+        }
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->dueDate){
+            $this->merge([
+                'due_date' => $this->dueDate,
+            ]);
+        }
+
+        if ($this->projectId) {
+            $this->merge([
+                'project_id' => $this->projectId,
+            ]);
+        }      
     }
 }

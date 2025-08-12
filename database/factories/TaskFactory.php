@@ -21,7 +21,7 @@ class TaskFactory extends Factory
             'project_id' => Project::factory(),
             'title' => $this->faker->unique()->text(rand(5,100)),
             'description' => $this->faker->paragraph(),
-            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed']),
+            'status' => $this->faker->randomElement(['pending', 'in_progress', 'done']),
             'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
             'due_date' => $this->faker->date(),
         ];

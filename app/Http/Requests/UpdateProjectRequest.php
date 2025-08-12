@@ -11,7 +11,7 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,20 @@ class UpdateProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if ($method == 'PUT') {
+            return [
+                'name' => 'required|string|min:3|max:100',
+                'description' => 'required|nullable|string',
+                'status' => 'required|in:active,inactive',
+            ];
+        } else {
+            return [
+                'name' => 'sometimes|required|string|min:3|max:100',
+                'description' => 'sometimes|required|nullable|string',
+                'status' => 'sometimes|required|in:active,inactive',
+            ];
+        }
     }
 }
